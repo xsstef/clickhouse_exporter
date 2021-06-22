@@ -289,7 +289,7 @@ func (e *Exporter) parsePartsResponse(uri string) ([]partsResult, error) {
 // as Prometheus metrics. It implements prometheus.Collector.
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	if err := e.collect(ch); err != nil {
-		log.Printf("Error scraping clickhouse: %s", err)
+		log.Fatalf("Error scraping clickhouse: %s", err)
 		e.scrapeFailures.Inc()
 		e.scrapeFailures.Collect(ch)
 	}
