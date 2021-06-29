@@ -295,6 +295,15 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
+func (e *Exporter) DialScrapeAddr() error {
+	_, err := e.parseKeyValueResponse(e.metricsURI)
+	if err != nil {
+		return fmt.Errorf("Error scraping clickhouse url %v: %v", e.metricsURI, err)
+	} else {
+		return nil
+	}
+}
+
 func metricName(in string) string {
 	out := toSnake(in)
 	return strings.Replace(out, ".", "_", -1)

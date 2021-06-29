@@ -2,6 +2,7 @@ package main // import "github.com/Percona-Lab/clickhouse_exporter"
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -41,6 +42,13 @@ func main() {
 			<p><a href="` + *metricsEndpoint + `">Metrics</a></p>
 			</body>
 			</html>`))
+	})
+	http.HandleFunc("/scrape", func(w http.ResponseWriter, r *http.Request) {
+		if err := e.DialScrapeAddr(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		} else {
+			fmt.Fprintf(w, "ok")
+		}
 	})
 
 	log.Fatal(http.ListenAndServe(*listeningAddress, nil))
